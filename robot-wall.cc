@@ -56,7 +56,7 @@ void take_action()
     }
     else if (regions["front"] > d && regions["fleft"] < d && regions["fright"] < d)
     {
-        // case 7 - case 8 - fleft and fright
+        // case 8 - fleft and fright
         state = '0';
     }
 }
@@ -72,16 +72,16 @@ double min_val(RangerProxy& lp, double startingIndex)
 		}
 	}
 
-    return minVal;
+    return min(minVal, 10);
 }
 
 void setRegions(RangerProxy& lp)
 {
-    regions["left"] = min_val(lp, 0);
-    regions["fleft"] = min_val(lp, 36);
+    regions["right"] = min_val(lp, 0);
+    regions["fright"] = min_val(lp, 36);
     regions["front"] = min_val(lp, 72);
-    regions["fright"] = min_val(lp, 108);
-    regions["right"] = min_val(lp, 144);
+    regions["fleft"] = min_val(lp, 108);
+    regions["left"] = min_val(lp, 144);
 
     cout << "left: " << regions["left"] << endl;
     cout << "fleft: " << regions["fleft"] << endl;
@@ -95,13 +95,13 @@ void setRegions(RangerProxy& lp)
 void find_wall(double* forwardSpeed, double* turnSpeed)
 {
     *forwardSpeed = 0.2;
-    *turnSpeed = -0.5;
+    *turnSpeed = -0.3;
 }
 
 void turn_left(double* forwardSpeed, double* turnSpeed)
 {
     *forwardSpeed = 0;
-    *turnSpeed = -0.5;
+    *turnSpeed = 0.3;
 }
 
 void follow_the_wall(double* forwardSpeed, double* turnSpeed)
@@ -113,6 +113,27 @@ void follow_the_wall(double* forwardSpeed, double* turnSpeed)
 void Wall(double *forwardSpeed, double *turnSpeed, RangerProxy &lp){
 
     setRegions(lp);
+
+	/*
+	
+	Switch to state Find the wall when:
+
+		No obstacles detected
+		Obstacle on the left side
+		Obstacles on the left and right sides
+
+	For the state Turn left:
+
+		Obstacles in front of the robot
+		Obstacles in front and left of the robot
+		Obstacles in front and right of the robot
+		Obstacles in front, left and right of the robot
+
+	And finally, we change to the state Follow the wall when:
+
+		Obstacle detected only on the right side of the robot
+	
+	 */
 
 	switch(state)
 	{
